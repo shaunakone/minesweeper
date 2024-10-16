@@ -11,14 +11,14 @@ def print_board(board):
     print("  -------------------------------")
 
     for index, row in enumerate(board):
-        print(index, "|", " ".join(row))  
+        print(index, "|", "".join(row))  
     
     print()  
 
 def check_location(board):
     
     col_choice = int(input("which col would you like to play in?")) 
-    row_choice = int(input("which col would you like to play in?")) 
+    row_choice = int(input("which row would you like to play in?")) 
 
 
     board[row_choice][col_choice] = "X"
