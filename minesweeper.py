@@ -1,5 +1,5 @@
 import numpy as np
-
+import random
 
 def create_board():
     board = np.full((10,10), " ")
@@ -11,13 +11,36 @@ def check_location(board, col, row):
     row_choice = int(input("which col would you like to play in?")) 
 
 
-    board[col_choice][row_choice] = "X"
+    board[row_choice][col_choice] = "X"
+
+    return (row_choice, col_choice)
 
 
 
-def bombs(board, bombs):
+def bombs(board, bombs = 10):
     
-    bomb_board = 
+    bomb_board = create_board()
+    bomb_loc = random.sample(range(10 * 10), bombs)
+
+    for pos in bomb_board:
+        row = pos//10
+        col = pos%10
+        bomb_board[row][col] == "*"
+    return bomb_board
+
+def compare(player_move, bomb_board):
+    
+    player_row, player_col = player_move
+
+    if bomb_board[player_row][player_col] == "*":
+        print("GG")
+        return True
+    else:
+        return False
+
+
+
+
 
 
 
