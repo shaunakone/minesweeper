@@ -41,7 +41,6 @@ def compare(player_move, bomb_board):
     player_row, player_col = player_move
 
     if bomb_board[player_row][player_col] == "*":
-        print("GG")
         return True
     else:
         return False
@@ -49,7 +48,7 @@ def compare(player_move, bomb_board):
 
     #1,2,3,
 
-    
+
 
 def play_game():
     player_board = create_board()  
