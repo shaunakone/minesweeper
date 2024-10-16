@@ -45,6 +45,11 @@ def compare(player_move, bomb_board):
         return True
     else:
         return False
+    
+
+    #1,2,3,
+
+    
 
 def play_game():
     player_board = create_board()  
