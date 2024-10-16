@@ -2,13 +2,18 @@ import numpy as np
 import random
 
 def create_board():
-    board = np.full((10,10), " ")
+    board = np.full((11,11), " ")
     return board
 
 def print_board(board):
-    for x in board:
-        print(" ".join(x))
-    print()
+
+    print("   1  2  3  4  5  6  7  8  9  10")
+    print("  -------------------------------")
+
+    for index, row in enumerate(board):
+        print(index, "|", " ".join(row))  
+    
+    print()  
 
 def check_location(board):
     
