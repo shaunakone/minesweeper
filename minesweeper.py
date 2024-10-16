@@ -5,7 +5,12 @@ def create_board():
     board = np.full((10,10), " ")
     return board
 
-def check_location(board, col, row):
+def print_board(board):
+    for x in board:
+        print(" ".join(x))
+    print()
+
+def check_location(board):
     
     col_choice = int(input("which col would you like to play in?")) 
     row_choice = int(input("which col would you like to play in?")) 
@@ -15,18 +20,21 @@ def check_location(board, col, row):
 
     return (row_choice, col_choice)
 
-
-
-def bombs(board, bombs = 10):
+def bombs(bombs = 10):
     
     bomb_board = create_board()
     bomb_loc = random.sample(range(10 * 10), bombs)
 
-    for pos in bomb_board:
+    for pos in bomb_loc:
         row = pos//10
         col = pos%10
-        bomb_board[row][col] == "*"
+        bomb_board[row][col] = "*"
+
+    for x in bomb_board:
+        print(" ".join(x))  
+
     return bomb_board
+
 
 def compare(player_move, bomb_board):
     
@@ -38,24 +46,24 @@ def compare(player_move, bomb_board):
     else:
         return False
 
+def play_game():
+    player_board = create_board()  
+    bomb_board = bombs(10) 
 
 
+    while True:
+        print_board(player_board)  
+        
+        player_move = check_location(player_board)  
+
+        if compare(player_move, bomb_board):
+            print("Game Over")
+            print_board(bomb_board)  
+            break  
 
 
+play_game()
 
-
-board = print_board()
-check_location(board, 0, 0)
-print(board)
-
-
-
-#def play_game():
-    #player = "X"
-    #user_input = int(input("Where do you want to place your bomb? (Row, Column)"))
-
-    #while(True):
-        #pr
 
 
 
