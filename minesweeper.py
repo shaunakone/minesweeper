@@ -2,18 +2,19 @@ import numpy as np
 import random
 
 def create_board():
-    board = np.full((11,11), " ")
+    board = np.full((10,10), " ")
     return board
 
 def print_board(board):
 
-    print("   1  2  3  4  5  6  7  8  9  10")
-    print("  -------------------------------")
+    #print("  1 2 3 4 5 6 7 8 9 10")
+    #print("-------------------------------")
 
-    for index, row in enumerate(board):
-        print(index, "|", "".join(row))  
-    
-    print()  
+
+     for index, row in enumerate(board[::-1]):
+        print(len(board) - 1 - index, "|", " ".join(row))
+     print("  --------------------------")
+     print("    " + " ".join(str(i) for i in range(len(board[0]))))
 
 def check_location(board):
     
@@ -26,7 +27,8 @@ def check_location(board):
     return (row_choice, col_choice)
 
 def bombs(bombs = 10):
-    
+
+
     bomb_board = create_board()
     bomb_loc = random.sample(range(10 * 10), bombs)
 
@@ -36,7 +38,14 @@ def bombs(bombs = 10):
         bomb_board[row][col] = "*"
 
     for x in bomb_board:
-        print(" ".join(x))  
+        print(" ".join(x)) 
+
+    for index, row in enumerate(bomb_board[::-1]):
+        print(len(bomb_board) - 1 - index, "|", " ".join(row))
+    print("  --------------------------")
+    print("    " + " ".join(str(i) for i in range(len(bomb_board[0]))))
+
+    #Create the check to see if there are bombs nearby - help
 
     return bomb_board
 
