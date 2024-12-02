@@ -6,16 +6,18 @@ def create_board():
     board = np.full((11, 11), " ")
     return board
 
-def counter():
-    count = 5
+#def powerup(bomb_board):
 
-    while count != 0:
-        #print(count)
-        time.sleep(1)
-        count -= 1
+    #count = 0
 
-    print("You have 5 seconds to think")
+    #while count != 10:
+        #count += 1
+        #continue
 
+
+    #print("Powerup activated!")
+    #print(bomb_board)
+    
 def print_board(board):
     for index, row in enumerate(board[::-1]):
         print(len(board) - 1 - index, "┃", " ".join(row))
@@ -39,8 +41,8 @@ def count_adjacent_bombs(row, col, bomb_board):
 
 def check_location(board, bomb_board): 
     #add more questions
-    questions  = {'What does a string and an int added together return?': "Error"}
-
+    questions  = {'What does a string and an int added together return?': 'Error', 'Are arrays mutable? (True or False)': 'True', 'Are tuples mutable? (True or False)': 'False'}
+    selected_question = random.choice(list(questions.keys()))
     while True:
         col_input = int(input("Which column would you like to play in? "))
         row_input = int(input("Which row would you like to play in? "))
@@ -49,36 +51,47 @@ def check_location(board, bomb_board):
             print("Invalid")
             continue
 
+
+        if board[row_input][col_input] != " ":
+            print("you have already picked this before")
+            continue
+
+
         if bomb_board[row_input][col_input] == "*":
             #update this part
-            for question in questions:
-                print(question)
-                counter()
-                question_input = str(input("Answer this question for a redemption round"))
-                
 
-                if questions[question] == question_input:
-                    break
-                else:
-                    print_board(bomb_board)
-                    print("Game Over")
-            #print("Game Over")
-            #print_board(bomb_board)
-                    return False
+            print(selected_question)
+            #counter()
+            question_input = str(input("Answer this question for a redemption round "))
+            
 
-        #
+            if questions[selected_question] == question_input:
+                board[row_input][col_input] = "*"
+                print("You can keep on going!")
+                return True
+            else:
+                print_board(bomb_board)
+                print("Game Over")
+                return False
+
         bombs_nearby = count_adjacent_bombs(row_input, col_input, bomb_board)
-        board[row_input][col_input] = (bombs_nearby)
+
+        if bombs_nearby > 0:
+            board[row_input][col_input] = str(bombs_nearby) 
+        else:
+            board[row_input][col_input] = "0"
         return True
+
+       
 
 
 def create_bomb_board(bombs=10):
     bomb_board = create_board()
-    bomb_loc = random.sample(range(10 * 10), bombs)
+    bomb_loc = random.sample(range(11 * 11), bombs)
 
     for pos in bomb_loc:
-        row = pos // 10
-        col = pos % 10
+        row = pos // 11
+        col = pos % 11
         bomb_board[row][col] = "*"
 
     return bomb_board
@@ -87,9 +100,24 @@ def play_game():
     player_board = create_board()  
     bomb_board = create_bomb_board(10) 
 
+    safe = 111
+    count = 0
+
     while True:
         print_board(player_board)  
         if not check_location(player_board, bomb_board):
             break
+        
+        count = 0
+        for row in player_board:
+            for cell in row:
+                if cell != " " and cell != "*":
+                    count += 1
+
+        if count == safe:
+            print_board(bomb_board)
+            print("You won the game!")
+            break
+        
 
 play_game()
