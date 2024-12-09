@@ -6,18 +6,6 @@ def create_board():
     board = np.full((11, 11), " ")
     return board
 
-#def powerup(bomb_board):
-
-    #count = 0
-
-    #while count != 10:
-        #count += 1
-        #continue
-
-
-    #print("Powerup activated!")
-    #print(bomb_board)
-    
 def print_board(board):
     for index, row in enumerate(board[::-1]):
         print(len(board) - 1 - index, "┃", " ".join(row))
@@ -25,43 +13,70 @@ def print_board(board):
     print("    " + " ".join(str(i) for i in range(len(board[0]))))
 
 def count_adjacent_bombs(row, col, bomb_board):
-
-    #end_loc = (row+(n*dir[0]), col+(n*dir[1]))
-
     count = 0
-    checks = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
-    
-    for r, c in checks:
-        new_row = row + r
-        new_col = col + c
-        if 0 <= new_row < len(bomb_board) and 0 <= new_col < len(bomb_board[0]):
-            if bomb_board[new_row][new_col] == "*":
+    rows = len(bomb_board)
+    cols = len(bomb_board[0])
+
+    for r in range(max(0, row - 1), min(row + 2, rows)):
+        for c in range(max(0, col - 1), min(col + 2, cols)):
+            if r == row and c == col:
+                continue 
+            if bomb_board[r][c] == '*':
                 count += 1
     return count
 
-def check_location(board, bomb_board): 
-    #add more questions
-    questions  = {'What does a string and an int added together return?': 'Error', 'Are arrays mutable? (True or False)': 'True', 'Are tuples mutable? (True or False)': 'False'}
-    selected_question = random.choice(list(questions.keys()))
-    while True:
-        col_input = int(input("Which column would you like to play in? "))
-        row_input = int(input("Which row would you like to play in? "))
 
-        if not (0 <= row_input < len(board) and 0 <= col_input < len(board[0])):
+def dig(row, col, board, bomb_board):
+    if not (0 <= row < len(bomb_board) and 0 <= col < len(bomb_board[0])):
+        return
+
+    if board[row][col] != " ":
+        return
+        
+    bombs_nearby = count_adjacent_bombs(row, col, bomb_board)
+    if bombs_nearby > 0:
+        board[row][col] = str(bombs_nearby) 
+    else:
+        board[row][col] = "0"
+    if bombs_nearby > 0:
+        return None
+
+    for r in range(row - 1, row + 2):
+        for c in range(col - 1, col + 2):
+            if 0 <= r < len(bomb_board) and 0 <= c < len(bomb_board[0]):
+                if board[r][c] == " " and bomb_board[r][c] != "*":
+                    bombs_nearby = count_adjacent_bombs(r, c, bomb_board)
+                    board[r][c] = str(bombs_nearby) if bombs_nearby > 0 else "0"
+
+
+
+def check_location(board, bomb_board): 
+    questions  = {'What does a string and an int added together return?': 'Error', 'Are arrays mutable? (True or False)': 'True', 'Are tuples mutable? (True or False)': 'False', 'What does the code 5/2 return?': '2.5', 'What does the code 7//2 return?': '3', 'What does the code 2.0**3 return?': '8.0', 'What symbol represents a comment in Python?': '#'}
+    while True:
+        col_input = (input("Which column would you like to play in? "))
+        row_input = (input("Which row would you like to play in? "))
+
+        if col_input.isalpha() or row_input.isalpha():
             print("Invalid")
             continue
+        else:
+            col_input = int(col_input)
+            row_input = int(row_input)
 
+        
+
+        if not (0 <= row_input < len(board) and 0 <= col_input < len(board[0]) and col_input != range(0,11)and row_input != range(0,11)):
+            print("Invalid")
+            continue
 
         if board[row_input][col_input] != " ":
             print("you have already picked this before")
             continue
 
-
         if bomb_board[row_input][col_input] == "*":
-            #update this part
+            selected_question = random.choice(list(questions.keys()))
 
             print(selected_question)
-            #counter()
             question_input = str(input("Answer this question for a redemption round "))
             
 
@@ -74,15 +89,8 @@ def check_location(board, bomb_board):
                 print("Game Over")
                 return False
 
-        bombs_nearby = count_adjacent_bombs(row_input, col_input, bomb_board)
-
-        if bombs_nearby > 0:
-            board[row_input][col_input] = str(bombs_nearby) 
-        else:
-            board[row_input][col_input] = "0"
+        dig(row_input, col_input, board, bomb_board)
         return True
-
-       
 
 
 def create_bomb_board(bombs=10):
@@ -100,7 +108,7 @@ def play_game():
     player_board = create_board()  
     bomb_board = create_bomb_board(10) 
 
-    safe = 111
+    safe = 11*11-10
     count = 0
 
     while True:
