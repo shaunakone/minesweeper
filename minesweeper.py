@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import time
+#import time
 
 def create_board():
     board = np.full((11, 11), " ")
@@ -11,6 +11,17 @@ def print_board(board):
         print(len(board) - 1 - index, "┃", " ".join(row))
     print("  ━━━━━━━━━━━━━━━━━━━━━━━━")
     print("    " + " ".join(str(i) for i in range(len(board[0]))))
+
+def create_bomb_board(bombs=10):
+    bomb_board = create_board()
+    bomb_loc = random.sample(range(11 * 11), bombs)
+
+    for pos in bomb_loc:
+        row = pos // 11
+        col = pos % 11
+        bomb_board[row][col] = "*"
+
+    return bomb_board
 
 def count_adjacent_bombs(row, col, bomb_board):
     count = 0
@@ -52,6 +63,7 @@ def dig(row, col, board, bomb_board):
 
 def check_location(board, bomb_board): 
     questions  = {'What does a string and an int added together return?': 'Error', 'Are arrays mutable? (True or False)': 'True', 'Are tuples mutable? (True or False)': 'False', 'What does the code 5/2 return?': '2.5', 'What does the code 7//2 return?': '3', 'What does the code 2.0**3 return?': '8.0', 'What symbol represents a comment in Python?': '#'}
+    used_questions = set()
     while True:
         col_input = (input("Which column would you like to play in? "))
         row_input = (input("Which row would you like to play in? "))
@@ -75,8 +87,8 @@ def check_location(board, bomb_board):
 
         if bomb_board[row_input][col_input] == "*":
             selected_question = random.choice(list(questions.keys()))
-
             print(selected_question)
+
             question_input = str(input("Answer this question for a redemption round "))
             
 
@@ -93,16 +105,6 @@ def check_location(board, bomb_board):
         return True
 
 
-def create_bomb_board(bombs=10):
-    bomb_board = create_board()
-    bomb_loc = random.sample(range(11 * 11), bombs)
-
-    for pos in bomb_loc:
-        row = pos // 11
-        col = pos % 11
-        bomb_board[row][col] = "*"
-
-    return bomb_board
 
 def play_game():
     player_board = create_board()  
